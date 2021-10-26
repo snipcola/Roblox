@@ -299,6 +299,10 @@ local XLib = {
             if inputEndedConnection then inputEndedConnection:Disconnect() end
           end)
         end
+
+        if Info.Button2.Color then
+          Text_2.TextColor3 = Info.Button2.Color
+        end
       end
       
       if Info.RemoveIn then
@@ -314,10 +318,6 @@ local XLib = {
             XAlert:Destroy()
           end)
         end)()
-      end
-
-      if Info.Button2.Color then
-        Text_2.TextColor3 = Info.Button2.Color
       end
     end
   
