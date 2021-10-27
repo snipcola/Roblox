@@ -1,6 +1,6 @@
 repeat task.wait() until game:IsLoaded()
 local CoreGui = game:GetService("CoreGui")
-if CoreGui:FindFirstChild("XAlerts") then return end
+if CoreGui:FindFirstChild("XAlerts") then CoreGui.XAlerts:Destroy() task.wait() end
 local XAlerts = Instance.new("ScreenGui")
 local XNotifications = Instance.new("Frame")
 local UIPadding = Instance.new("UIPadding")
