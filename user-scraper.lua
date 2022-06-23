@@ -49,6 +49,10 @@ end
 local function writeToJsonFile(fileName, itm, remvDupes)
     local isFile = isfile(fileName)
     
+    if itm == '' or itm == nil or not itm then
+        return
+    end
+    
     if not isFile then
         writefile(fileName, '[]')
     end
