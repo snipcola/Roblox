@@ -118,12 +118,14 @@ local function existsInJsonFile(fileName, val)
     return table.find(json, value) and true or false
 end
 
+task.wait(5)
+
 if not existsInJsonFile(jobIdsFileName, jobId) then
     savePlayerInfo(players:GetPlayers(), info)
     saveJobId(jobId)
 end
 
-while task.wait(5) do
+while task.wait(2.5) do
     pcall(function()
         local instances = getInstances(getInstancesUrl)
         local nextInstance = randItem(instances)
