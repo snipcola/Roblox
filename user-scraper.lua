@@ -9,8 +9,6 @@ local jobId = game.JobId
 local placeId = game.PlaceId
 local getInstancesUrl = "https://games.roblox.com/v1/games/" .. placeId .. '/servers/Public'
 
-repeat task.wait() until game:IsLoaded()
-
 local function encodeJson(tbl)
     return httpService:JSONEncode(tbl)
 end
