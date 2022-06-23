@@ -66,7 +66,7 @@ local function writeToJsonFile(fileName, itm, remvDupes)
     end
     
     if type(itm) == "table" then
-        for _, itm in pairs(tbl) do
+        for _, itm in pairs(itm) do
             table.insert(json, itm)
         end
     else
