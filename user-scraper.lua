@@ -46,7 +46,7 @@ local function removeDuplicates(tbl)
     return ttbl
 end
 
-local function writeToJsonFile(fileName, tbl, remvDupes)
+local function writeToJsonFile(fileName, itm, remvDupes)
     local isFile = isfile(fileName)
     
     if not isFile then
@@ -65,7 +65,11 @@ local function writeToJsonFile(fileName, tbl, remvDupes)
         json = decodeJson(fileContents)
     end
     
-    for _, itm in pairs(tbl) do
+    if type(itm) == "table" then
+        for _, itm in pairs(tbl) do
+            table.insert(json, itm)
+        end
+    else
         table.insert(json, itm)
     end
     
