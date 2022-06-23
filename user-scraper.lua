@@ -91,7 +91,7 @@ local function joinGame(plcId, guid)
 end
 
 local function saveJobId(id)
-    writeToJsonFile(jobIdsFileName, { id })
+    writeToJsonFile(jobIdsFileName, id)
 end
 
 local function existsInJsonFile(fileName, val)
