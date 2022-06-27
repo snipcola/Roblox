@@ -239,11 +239,11 @@ addCommand('infinitestamina', {'infstamina'}, {}, function()
 			
 		stamina.Value = 100
 	end
-end
+end)
 	
 addCommand('uninfinitestamina', {'uninfstamina'}, {}, function()
 	XAdminVariables.InfiniteStamina = false
-end
+end)
 
 addCommand('goto', {'to'}, {}, function(args)
 	local players = game:GetService('Players')
