@@ -20,6 +20,12 @@ local ui = {
 }
 local commands = {}
 
+if not XAdminVariables then
+	getgenv().XAdminVariables = {
+		InfiniteStamina = false
+	}
+end
+
 if not config then
 	getgenv().config = {
 		host = 'http://localhost',
@@ -220,7 +226,26 @@ ui.placeholder.Text = ''
 ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
 ui.placeholder.BorderSizePixel = 0
 
-addCommand('teleport', {'tp'}, {}, function(args)
+addCommand('infinitestamina', {'infstamina'}, {}, function()
+	XAdminVariables.InfiniteStamina = true
+		
+	while task.wait() and XAdminVariables.InfiniteStamina do
+		local playerGui = localPlayer:WaitForChild("PlayerGui")
+		local gameGui = playerGui:WaitForChild("GameGui")
+		local bottomLeft = gameGui:WaitForChild("BottomLeft")
+		local health = bottomLeft:WaitForChild("Health")
+		local staminaLS = bottomLeft:WaitForChild("Stamina LS")
+		local stamina = staminaLS:WaitForChild("Stamina")
+			
+		stamina.Value = 100
+	end
+end
+	
+addCommand('uninfinitestamina', {'uninfstamina'}, {}, function()
+	XAdminVariables.InfiniteStamina = false
+end
+
+addCommand('goto', {'to'}, {}, function(args)
 	local players = game:GetService('Players')
   	local username = table.unpack(args)
 	local targetPlayer = findPlayer(username, players:GetPlayers())
