@@ -215,7 +215,7 @@ addCommand('moderate', {'m'}, {nil, {"Warning", "Kicked", "Banned", "Other"}}, f
 
 	if action and reason then
 		local req = game:HttpGet(config.host .. ':' .. config.port .. '/moderate/' .. (targetPlayer and targetPlayer.Name or username) .. '/' .. action:gsub("^%l", string.upper) .. '/' .. httpService:UrlEncode(reason))
-		local res = httpService:JSONDecode(req.Body)
+		local res = httpService:JSONDecode(req)
 
 		if res and res.success ~= nil then
 			sendNotification('Moderation ' .. ((not res.success) and 'un' or '') .. 'successful', 'This moderation event has' .. ((not res.success) and ' not' or '') .. ' been logged.')
@@ -225,7 +225,7 @@ end)
 
 addCommand('clockin', {'ci'}, {}, function()
     local req = game:HttpGet(config.host .. ':' .. config.port .. '/clockin')
-    local res = httpService:JSONDecode(req.Body)
+    local res = httpService:JSONDecode(req)
 
     if res and res.success ~= nil then
       sendNotification('Moderation ' .. ((not res.success) and 'un' or '') .. 'successful', 'This moderation event has' .. ((not res.success) and ' not' or '') .. ' been completed.')
@@ -234,7 +234,7 @@ end)
 
 addCommand('clockout', {'co'}, {}, function()
     local req = game:HttpGet(config.host .. ':' .. config.port .. '/clockout')
-    local res = httpService:JSONDecode(req.Body)
+    local res = httpService:JSONDecode(req)
 
     if res and res.success ~= nil then
       sendNotification('Moderation ' .. ((not res.success) and 'un' or '') .. 'successful', 'This moderation event has' .. ((not res.success) and ' not' or '') .. ' been completed.')
