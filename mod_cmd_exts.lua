@@ -120,8 +120,14 @@ end
 
 local function findCommand(string)
 	for _, command in pairs(commands) do
-		if startsWith(command.name:lower(), string:lower()) then
+		if command.name and startsWith(command.name:lower(), string:lower()) then
 			return command
+		elseif command.alias then
+			for _, alias in pairs(command.alias) do
+				if startsWith(alias:lower(), string:lower()) then
+					return command
+				end
+			end
 		end
 	end
 
