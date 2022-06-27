@@ -128,6 +128,13 @@ local function findCommand(string)
 	return false
 end
 
+local function getRootPart(player)
+	local character = player.Character or player.CharacterAdded:Wait()
+	local rootPart = character:WaitForChild("HumanoidRootPart")
+	
+	return rootPart
+end
+
 local function sendNotification(title, text, duration)
 	starterGui:SetCore('SendNotification', {
 		Title = title,
@@ -207,9 +214,22 @@ ui.placeholder.Text = ''
 ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
 ui.placeholder.BorderSizePixel = 0
 
+addCommand('teleport', {'tp'}, {}, function(args)
+	local players = game:GetService('Players')
+  	local username = table.unpack(args)
+	local targetPlayer = findPlayer(username, players:GetPlayers())
+
+	if targetPlayer then
+		local localRootPart = getRootPart(localPlayer)
+		local targetRootPart = getRootPart(targetPlayer)
+			
+		localRootPart.CFrame = targetRootPart.CFrame
+	end
+end)
+
 addCommand('moderate', {'m'}, {nil, {"Warning", "Kicked", "Banned", "Other"}}, function(args)
 	local players = game:GetService('Players')
-  local username, action = table.unpack(args)
+        local username, action = table.unpack(args)
 	local reason = table.concat(args, ' '):sub(#username + #action + 3)
 	local targetPlayer = findPlayer(username, players:GetPlayers())
 
