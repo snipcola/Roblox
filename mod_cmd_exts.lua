@@ -4,6 +4,7 @@ for _, script in pairs(getconnections(scriptContext.Error)) do
   script:Disable()
 end
 
+local lighting = game:GetService("Lighting")
 local replicatedStorage = game:GetService('ReplicatedStorage')
 local userInputService = game:GetService('UserInputService')
 local players = game:GetService('Players')
@@ -24,6 +25,7 @@ local commands = {}
 if not XAdminVariables then
 	getgenv().XAdminVariables = {
 		UserInputServiceConnection,
+		SetTimeConnection,
 		InfiniteStamina = false,
 		gameVehicleLocations = {
 			["Spawn"] = CFrame.new(-662.1253662109375, 23.474824905395508, 641.8193969726562)
@@ -90,6 +92,9 @@ if not XAdminVariables then
 elseif XAdminVariables.UserInputServiceConnection then
 	XAdminVariables.UserInputServiceConnection:Disconnect()
 	XAdminVariables.UserInputServiceConnection = nil
+elseif XAdminVariables.SetTimeConnection then
+	XAdminVariables.SetTimeConnection:Disconnect()
+	XAdminVariables.SetTimeConnection = nil
 end
 
 if not config then
@@ -290,7 +295,7 @@ ui.command.TextSize = 15
 ui.command.TextXAlignment = Enum.TextXAlignment.Left
 ui.command.Parent = ui.frame
 ui.command.TextColor3 = Color3.fromRGB(255, 255, 255)
-ui.command.PlaceholderColor3 = Color3.fromRGB(200, 200, 200)
+ui.command.PlaceholderColor3 = Color3.fromRGB(225, 225, 225)
 ui.command.FocusLost:Connect(toggleGui)
 ui.command:GetPropertyChangedSignal('Text'):Connect(function()
 	local args = ui.command.Text:split(' ')
@@ -321,7 +326,7 @@ ui.placeholder.TextXAlignment = Enum.TextXAlignment.Left
 ui.placeholder.Position = UDim2.new(0, 0, 0.5, 0)
 ui.placeholder.AnchorPoint = Vector2.new(0, 0.5)
 ui.placeholder.Text = ''
-ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
+ui.placeholder.TextColor3 = Color3.fromRGB(225, 225, 225)
 ui.placeholder.BorderSizePixel = 0
 
 local locationIndexes = {}
@@ -354,6 +359,28 @@ local toolsIndexes = {}
 for tool, _ in pairs(XAdminVariables.gameTools) do
 	table.insert(toolsIndexes, tool)
 end
+
+addCommand('time', {{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}}, function(args)
+	local hours = table.unpack(args)
+		
+	if XAdminVariables.SetTimeConnection then
+		 XAdminVariables.SetTimeConnection:Disconnect()
+		 XAdminVariables.SetTimeConnection = nil
+	end
+			
+	if tonumber(hours) >= 0 and tonumber(hours) <= 12 then
+		XAdminVariables.SetTimeConnection = lighting:GetPropertyChangedSignal("TimeOfDay"):Connect(function()
+			lighting:SetMinutesAfterMidnight((tonumber(hours) - 12) * 60)
+		end)
+	end
+end)
+	
+addCommand('untime', {}, function(args)
+	if XAdminVariables.SetTimeConnection then
+		 XAdminVariables.SetTimeConnection:Disconnect()
+		 XAdminVariables.SetTimeConnection = nil
+	end
+end)
 
 addCommand('gettool', {toolsIndexes}, function(args)
 	local tools = XAdminVariables.gameTools
@@ -411,7 +438,11 @@ addCommand('res', {}, function()
 end)
 
 addCommand('infstamina', {}, function()
-	XAdminVariables.InfiniteStamina = true
+	if XAdminVariables.InfiniteStamina then
+		return
+	else
+		XAdminVariables.InfiniteStamina = true
+	end
 		
 	while task.wait() and XAdminVariables.InfiniteStamina do
 		local playerGui = localPlayer:FindFirstChild("PlayerGui")
@@ -443,7 +474,9 @@ addCommand('infstamina', {}, function()
 end)
 	
 addCommand('uninfstamina', {}, function()
-	XAdminVariables.InfiniteStamina = false
+	if XAdminVariables.InfiniteStamina then
+		XAdminVariables.InfiniteStamina = false
+	end
 end)
 
 addCommand('tocar', {}, function()
