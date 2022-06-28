@@ -4,6 +4,7 @@ for _, script in pairs(getconnections(scriptContext.Error)) do
   script:Disable()
 end
 
+local replicatedStorage = game:GetService('ReplicatedStorage')
 local userInputService = game:GetService('UserInputService')
 local players = game:GetService('Players')
 local localPlayer = players.LocalPlayer
@@ -22,16 +23,62 @@ local commands = {}
 
 if not XAdminVariables then
 	getgenv().XAdminVariables = {
+		UserInputServiceConnection,
 		InfiniteStamina = false,
+		gameVehicleLocations = {
+			["Spawn"] = CFrame.new(-662.1253662109375, 23.474824905395508, 641.8193969726562),
+		},
+		gameLocations = {
+			["Spawn"] = CFrame.new(-678.4291381835938, 23.974824905395508, 762.0128173828125),
+			["Car Dealership"] = CFrame.new(-321.2814025878906, 23.974830627441406, 704.4762573242188),
+			["Gas 1"] = CFrame.new(-1016.4197998046875, 23.474876403808594, 770.4301147460938),
+			["Gas 2"] = CFrame.new(660.5532836914062, 3.4248907566070557, -1502.9072265625),
+			["Gas 3"] = CFrame.new(2545.51123046875, -12.1521577835083, -1667.8369140625),
+			["Bank Front"] = CFrame.new(-1001.3585815429688, 23.974824905395508, 430.1639099121094),
+			["Bank Back"] = CFrame.new(-1122.354248046875, 23.674623489379883, 447.4416198730469),
+			["Jewelery Store"] = CFrame.new(-465.13018798828125, 23.974824905395508, -421.19219970703125),
+			["Gun Shop"]  = CFrame.new(-1225.400146484375, 24.46483612060547, -189.43653869628906),
+			["Tool Store"] = CFrame.new(-433.69927978515625, 24.774852752685547, -710.2664794921875),
+			["Mod Shop"] = CFrame.new(-724.5809326171875, 23.474824905395508, 186.442138671875),
+			["Fire Department"] = CFrame.new(-1114.415283203125, 23.476028442382812, 118.9657974243164),
+			["Hospital Front"] = CFrame.new(-142.38037109375, 23.751134872436523, -430.4136047363281),
+			["Hospital Back"] = CFrame.new(-141.86207580566406, 23.474830627441406, -535.7492065429688),
+			["Three Guys"] = CFrame.new(-343.96099853515625, 23.47467803955078, -171.7455596923828),
+			["Liberty Cafe"] = CFrame.new(-683.9157104492188, 23.974830627441406, 503.2774658203125),
+			["Parking 1"] = CFrame.new(-311.9945983886719, 24.174867630004883, 122.81948852539062),
+			["Parking 2"] = CFrame.new(2717.137939453125, -12.153314590454102, -2266.29150390625),
+			["News"] = CFrame.new(-343.531982421875, 23.974824905395508, 344.9596862792969),
+			["Police Back"] = CFrame.new(651.2056884765625, 3.9404656887054443, -139.31932067871094),
+			["Police Front"] = CFrame.new(796.5810546875, 3.9404661655426025, -78.71920776367188),
+			["Sheriff 1"] = CFrame.new(1453.9732666015625, -11.668456077575684, -1963.669677734375),
+			["Sheriff 2"] = CFrame.new(1538.0145263671875, -11.668490409851074, -1916.6688232421875),
+			["DOT"] = CFrame.new(1275.442626953125, 3.4252281188964844, 168.31478881835938),
+			["County Jail"] = CFrame.new(1341.18408203125, 3.92265248298645, -336.8629150390625),
+			["Trailer Park"] = CFrame.new(1203.5413818359375, 3.334216356277466, -983.1029663085938),
+			["Farms"] = CFrame.new(840.14111328125, 3.37484073638916, -1139.185791015625),
+			["Housing Suburbs"] = CFrame.new(-491.2051696777344, -8.82550048828125, -1478.725830078125),
+			["ATM 1"] = CFrame.new(-967.5352783203125, 23.96831703186035, 829.1295166015625),
+			["ATM 2"] = CFrame.new(-1018.8355102539062, 24.101520538330078, 442.1720275878906),
+			["ATM 3"] = CFrame.new(-486.49755859375, 23.974824905395508, 444.6559143066406),
+			["ATM 4"] = CFrame.new(-372.1230163574219, 23.974824905395508, 151.59494018554688),
+			["ATM 5"] = CFrame.new(-585.8339233398438, 23.87482452392578, -408.5081787109375),
+			["ATM 6"] = CFrame.new(997.2130737304688, 3.9248406887054443, -25.608179092407227),
+			["ATM 7"] = CFrame.new(1116.60498046875, 3.924849271774292, 371.0657653808594),
+			["ATM 8"] = CFrame.new(720.2720947265625, 3.4248409271240234, -1565.1844482421875),
+			["ATM 9"] = CFrame.new(2486.7001953125, -11.653159141540527, -1738.4417724609375),
+			["ATM 10"] = CFrame.new(2613.243896484375, -11.653230667114258, -2100.08056640625),
+			["ATM 11"] = CFrame.new(2564.28271484375, -11.653286933898926, -2237.84423828125)
+		},
 		gameTools = {
-			"Baseball Bat",
-			"Hammer",
-			"Knife",
-			"RFID Disruptor",
-			"Lockpick",
-			"Drill",
-			"Flashlight",
-			"Scanner"
+			["Baseball Bat"] = "Tool Store",
+			["Hammer"] = "Tool Store",
+			["Knife"] = "Tool Store",
+			["RFID Disruptor"] = "Tool Store",
+			["Lockpick"] = "Tool Store",
+			["Drill"] = "Tool Store",
+			["Flashlight"] = "Tool Store",
+			["Scanner"] = "Tool Store",
+			["Ammo Box"] = "Gun Shop"
 		},
 		moderateActions = {
 			"Warning",
@@ -40,6 +87,9 @@ if not XAdminVariables then
 			"Other"
 		}
 	}
+elseif XAdminVariables.UserInputServiceConnection then
+	XAdminVariables.UserInputServiceConnection:Disconnect()
+	XAdminVariables.UserInputServiceConnection = nil
 end
 
 if not config then
@@ -129,6 +179,7 @@ local function executeCommand(commandsString, msgArgs)
 		for _, commandString in pairs(commandsString:split(' ')) do
 			if commandString == command.name then
 				coroutine.wrap(command.func)(msgArgs)
+				break
 			end
 		end
 	end
@@ -180,6 +231,24 @@ local function getVehicle(player)
 				end
 			end
 		end
+	end
+end
+
+local function teleportPlayer(player, cframe)
+	local rootPart = getRootPart(player)
+	
+	if rootPart then
+		for _ = 1, 5, 1 do
+			rootPart.CFrame = cframe
+			task.wait(.1)
+		end
+	end
+end
+
+local function teleportObject(object, cframe)
+	for _ = 1, 5, 1 do
+		object.CFrame = cframe
+		task.wait(.1)
 	end
 end
 
@@ -254,23 +323,76 @@ ui.placeholder.Text = ''
 ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
 ui.placeholder.BorderSizePixel = 0
 
-addCommand('gettool', {XAdminVariables.gameTools}, function(args)
-	local tools = XAdminVariables.gameTools
+local locationIndexes = {}
+
+for location, _ in pairs(XAdminVariables.gameLocations) do
+	table.insert(locationIndexes, location)
+end
+
+addCommand('tol', {locationIndexes}, function(args)
+	local locations = XAdminVariables.gameLocations
 	local text = table.concat(args, " ")
-	
-	local function getTool(tool)
-		SendNotification('Tool', tool)
-	end
 		
-	for _, tool in pairs(tools) do
-		if tool:lower() == text:lower() then
-			getTool(tool)
+	for location, cframe in pairs(locations) do
+		if location:lower() == text:lower() then
+			teleportPlayer(localPlayer, cframe)
+			break
 		end
 	end
 		
-	for _, tool in pairs(tools) do
+	for location, cframe in pairs(locations) do
+		if startsWith(location:lower(), text:lower()) then
+			teleportPlayer(localPlayer, cframe)
+			break
+		end
+	end
+end)
+
+local toolsIndexes = {}
+
+for tool, _ in pairs(XAdminVariables.gameTools) do
+	table.insert(toolsIndexes, tool)
+end
+
+addCommand('gettool', {toolsIndexes}, function(args)
+	local tools = XAdminVariables.gameTools
+	local text = table.concat(args, " ")
+	
+	local function getTool(tool, location)
+		local locationCFrame = XAdminVariables.gameLocations[location]
+			
+		if locationCFrame then
+			local fe = replicatedStorage:FindFirstChild("FE")
+				
+			if fe then
+				local rootPart = getRootPart(localPlayer)
+				local buyGear = fe:FindFirstChild("BuyGear")
+					
+				if rootPart and buyGear then
+					local originalCFrame = rootPart.CFrame
+						
+					teleportPlayer(localPlayer, locationCFrame)
+						
+					buyGear:InvokeServer(tool)
+					task.wait(.2)
+						
+					teleportPlayer(localPlayer, originalCFrame)
+				end
+			end
+		end
+	end
+		
+	for tool, location in pairs(tools) do
+		if tool:lower() == text:lower() then
+			getTool(tool, location)
+			break
+		end
+	end
+		
+	for tool, location in pairs(tools) do
 		if startsWith(tool:lower(), text:lower()) then
-			getTool(tool)
+			getTool(tool, location)
+			break
 		end
 	end
 end)
@@ -327,7 +449,7 @@ addCommand('tocar', {}, function()
 	local vehicle = getVehicle(localPlayer)
 	local body = vehicle:FindFirstChild("Body")
 	
-	if body then
+	if vehicle and body then
 		local base = body:FindFirstChild("Base")
 		
 		if base then
@@ -343,8 +465,7 @@ addCommand('tocar', {}, function()
 					if isSitting then
 						sendNotification('To Car', 'Humanoid is sitting, aborted')
 					else
-						rootPart.CFrame = base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2)
-						task.wait(.1)
+						teleportPlayer(localPlayer, base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2))
 						driverSeat:Sit(humanoid)
 					end
 				end
@@ -357,7 +478,7 @@ addCommand('bringcar', {}, function()
 	local vehicle = getVehicle(localPlayer)
 	local body = vehicle:FindFirstChild("Body")
 	
-	if body then
+	if vehicle and body then
 		local base = body:FindFirstChild("Base")
 		
 		if base then
@@ -375,7 +496,7 @@ addCommand('bringcar', {}, function()
 					else
 						local originalCFrame = rootPart.CFrame
 							
-						rootPart.CFrame = base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2)
+						teleportPlayer(localPlayer, base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2))
 						task.wait(.1)
 						driverSeat:Sit(humanoid)
 						task.wait(.2)
@@ -387,16 +508,47 @@ addCommand('bringcar', {}, function()
 	end
 end)
 
+addCommand('carto', {}, function(args)
+	local players = game:GetService('Players')
+  	local username = table.unpack(args)
+	local targetPlayer = findPlayer(username, players:GetPlayers())
+	local vehicle = getVehicle(localPlayer)
+
+	if targetPlayer and vehicle then
+		local rootPart = getRootPart(localPlayer)
+		local humanoid = rootPart.Parent:FindFirstChild("Humanoid")
+
+		if rootPart and humanoid then
+			local isSitting = humanoid.Sit
+
+			if not isSitting then
+				sendNotification('To Car', 'Humanoid is not sitting, aborted')
+			else
+				local targetRootPart = getRootPart(targetPlayer)
+
+				if targetRootPart then
+					local teleportCFrame = targetRootPart.CFrame - Vector3.new(5, 0, 0)
+
+					vehicle:SetPrimaryPartCFrame(teleportCFrame)
+				end
+			end
+		end
+	end
+end)
+
 addCommand('to', {}, function(args)
 	local players = game:GetService('Players')
-  	local username = args[1]
+  	local username = table.unpack(args)
 	local targetPlayer = findPlayer(username, players:GetPlayers())
 
 	if targetPlayer then
-		local localRootPart = getRootPart(localPlayer)
 		local targetRootPart = getRootPart(targetPlayer)
+		
+		if targetRootPart then
+			local teleportCFrame = targetRootPart.CFrame - Vector3.new(1, 0, 0)
 			
-		localRootPart.CFrame = targetRootPart.CFrame
+			teleportPlayer(localPlayer, teleportCFrame)
+		end
 	end
 end)
 
@@ -434,7 +586,7 @@ addCommand('co', {}, function()
     end
 end)
 
-userInputService.InputBegan:Connect(function(input, onGui)
+XAdminVariables.UserInputServiceConnection = userInputService.InputBegan:Connect(function(input, onGui)
 	if input.UserInputType == Enum.UserInputType.Keyboard then
 		if input.KeyCode == Enum.KeyCode.Semicolon and not onGui then toggleGui()
 		elseif ui.frame.Visible and input.KeyCode == Enum.KeyCode.Return then
@@ -444,6 +596,8 @@ userInputService.InputBegan:Connect(function(input, onGui)
 			
 			toggleGui()
 			executeCommand(command.name, args)
+		elseif input.KeyCode == Enum.KeyCode.N and not onGui then
+			executeCommand('res')
 		end
 	end
 end)
