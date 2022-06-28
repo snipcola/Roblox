@@ -104,25 +104,15 @@ local function findPlayer(playerUsername, players)
 	return false
 end
 
-local function addCommand(name, alias, args, func)
-	commands[#commands + 1] = { name = name, alias = alias, args = args, func = func }
+local function addCommand(name, args, func)
+	commands[#commands + 1] = { name = name, args = args, func = func }
 end
 
-local function executeCommand(commandsString, msgArgs)
-	local function doFunc(func, args)
-		coroutine.wrap(func)(args)
-	end
-	
+local function executeCommand(commandsString, msgArgs)	
 	for _, command in pairs(commands) do
 		for _, commandString in pairs(commandsString:split(' ')) do
 			if commandString == command.name then
-				doFunc(command.func, msgArgs)
-			else
-				for _, alias in pairs(command.alias) do
-					if commandString == alias then
-						doFunc(command.func, msgArgs)
-					end
-				end
+				coroutine.wrap(command.func)(msgArgs)
 			end
 		end
 	end
@@ -130,14 +120,14 @@ end
 
 local function findCommand(string)
 	for _, command in pairs(commands) do
-		if command.name and startsWith(command.name:lower(), string:lower()) then
+		if command.name:lower() == string:lower() then
 			return command
-		elseif command.alias then
-			for _, alias in pairs(command.alias) do
-				if startsWith(alias:lower(), string:lower()) then					
-					return command
-				end
-			end
+		end
+	end
+	
+	for _, command in pairs(commands) do
+		if startsWith(command.name:lower(), string:lower()) then
+			return command
 		end
 	end
 
@@ -146,9 +136,9 @@ end
 
 local function getRootPart(player)
 	local character = player.Character or player.CharacterAdded:Wait()
-	local rootPart = character:WaitForChild("HumanoidRootPart")
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
 	
-	return rootPart
+	return rootPart or nil
 end
 
 local function sendNotification(title, text, duration)
@@ -157,6 +147,24 @@ local function sendNotification(title, text, duration)
 		Text = text,
 		Duration = duration or 5
 	})
+end
+
+local function getVehicle(player)
+	local vehicles = workspace:FindFirstChild('Vehicles')
+	
+	if vehicles then
+		for _, vehicle in pairs(vehicles:GetChildren()) do
+			local controlValues = vehicle:FindFirstChild("Control_Values")
+			
+			if controlValues then
+				local owner = controlValues:FindFirstChild("Owner")
+
+				if owner and owner.Value == player.Name then
+					return vehicle
+				end
+			end
+		end
+	end
 end
 
 ui.gui.Name = guiName
@@ -230,32 +238,122 @@ ui.placeholder.Text = ''
 ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
 ui.placeholder.BorderSizePixel = 0
 
-addCommand('infinitestamina', {'infstamina'}, {}, function()
+addCommand('res', {}, function()
+	local rootPart = getRootPart(localPlayer)
+		
+	if rootPart then
+		local humanoid = rootPart.Parent:FindFirstChild("Humanoid")
+			
+		if humanoid then
+			humanoid.Health = 0
+		end
+	end
+end)
+
+addCommand('infstamina', {}, function()
 	XAdminVariables.InfiniteStamina = true
 		
 	while task.wait() and XAdminVariables.InfiniteStamina do
-		local playerGui = localPlayer:WaitForChild("PlayerGui")
-		local gameGui = playerGui:WaitForChild("GameGui")
-		local bottomLeft = gameGui:WaitForChild("BottomLeft")
-		local health = bottomLeft:WaitForChild("Health")
-		local staminaLS = health:WaitForChild("Stamina LS")
-		local stamina = staminaLS:WaitForChild("Stamina")
+		local playerGui = localPlayer:FindFirstChild("PlayerGui")
+		
+		if playerGui then
+			local gameGui = playerGui:FindFirstChild("GameGui")
 			
-		stamina.Value = 100
+			if gameGui then
+				local bottomLeft = gameGui:FindFirstChild("BottomLeft")
+				
+				if bottomLeft then
+					local health = bottomLeft:FindFirstChild("Health")
+					
+					if health then
+						local staminaLS = health:FindFirstChild("Stamina LS")
+						
+						if staminaLS then
+							local stamina = staminaLS:FindFirstChild("Stamina")
+
+							if stamina then
+								stamina.Value = 100
+							end
+						end
+					end
+				end
+			end
+		end
 	end
 end)
 	
-addCommand('uninfinitestamina', {'uninfstamina'}, {}, function()
+addCommand('uninfstamina', {}, function()
 	XAdminVariables.InfiniteStamina = false
 end)
 
-addCommand('goto', {'to'}, {}, function(args)
+addCommand('tocar', {}, function()
+	local vehicle = getVehicle(localPlayer)
+	local body = vehicle:FindFirstChild("Body")
+	
+	if body then
+		local base = body:FindFirstChild("Base")
+		
+		if base then
+			local driverSeat = vehicle:FindFirstChild("DriverSeat")
+			
+			if driverSeat then
+				local rootPart = getRootPart(localPlayer)
+				local humanoid = rootPart.Parent:FindFirstChild("Humanoid")
+				
+				if rootPart and humanoid then
+					local isSitting = humanoid.Sit
+
+					if isSitting then
+						sendNotification('To Car', 'Humanoid is sitting, aborted')
+					else
+						rootPart.CFrame = base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2)
+						task.wait(.1)
+						driverSeat:Sit(humanoid)
+					end
+				end
+			end
+		end
+	end
+end)
+
+addCommand('bringcar', {}, function()
+	local vehicle = getVehicle(localPlayer)
+	local body = vehicle:FindFirstChild("Body")
+	
+	if body then
+		local base = body:FindFirstChild("Base")
+		
+		if base then
+			local driverSeat = vehicle:FindFirstChild("DriverSeat")
+			
+			if driverSeat then
+				local rootPart = getRootPart(localPlayer)
+				local humanoid = rootPart.Parent:FindFirstChild("Humanoid")
+				
+				if rootPart and humanoid then
+					local isSitting = humanoid.Sit
+
+					if isSitting then
+						sendNotification('To Car', 'Humanoid is sitting, aborted')
+					else
+						local originalCFrame = rootPart.CFrame
+							
+						rootPart.CFrame = base.CFrame + Vector3.new(0, 10, 0) - Vector3.new(0, 0, 2)
+						task.wait(.1)
+						driverSeat:Sit(humanoid)
+						task.wait(.2)
+						vehicle:SetPrimaryPartCFrame(originalCFrame)
+					end
+				end
+			end
+		end
+	end
+end)
+
+addCommand('to', {}, function(args)
 	local players = game:GetService('Players')
   	local username = args[1]
 	local targetPlayer = findPlayer(username, players:GetPlayers())
-		
-	print(username)
-	print(targetPlayer)
 
 	if targetPlayer then
 		local localRootPart = getRootPart(localPlayer)
@@ -265,7 +363,7 @@ addCommand('goto', {'to'}, {}, function(args)
 	end
 end)
 
-addCommand('moderate', {'m'}, {nil, {"Warning", "Kicked", "Banned", "Other"}}, function(args)
+addCommand('m', {nil, {"Warning", "Kicked", "Banned", "Other"}}, function(args)
 	local players = game:GetService('Players')
         local username, action = table.unpack(args)
 	local reason = table.concat(args, ' '):sub(#username + #action + 3)
@@ -281,7 +379,7 @@ addCommand('moderate', {'m'}, {nil, {"Warning", "Kicked", "Banned", "Other"}}, f
 	end
 end)
 
-addCommand('clockin', {'ci'}, {}, function()
+addCommand('ci', {}, function()
     local req = game:HttpGet(config.host .. ':' .. config.port .. '/clockin')
     local res = httpService:JSONDecode(req)
 
@@ -290,7 +388,7 @@ addCommand('clockin', {'ci'}, {}, function()
     end
 end)
 
-addCommand('clockout', {'co'}, {}, function()
+addCommand('co', {}, function()
     local req = game:HttpGet(config.host .. ':' .. config.port .. '/clockout')
     local res = httpService:JSONDecode(req)
 
@@ -305,7 +403,7 @@ userInputService.InputBegan:Connect(function(input, onGui)
 		elseif ui.frame.Visible and input.KeyCode == Enum.KeyCode.Return then
 			local text = ui.command.Text:split(' ')[1]
 			local command = findCommand(text)
-			local args = ui.command.Text:sub(2 + #command.name):split(' ')
+			local args = ui.command.Text:sub(#command.name + 2):split(' ')
 			
 			toggleGui()
 			executeCommand(command.name, args)
