@@ -109,14 +109,18 @@ local function addCommand(name, alias, args, func)
 end
 
 local function executeCommand(commandsString, msgArgs)
+	local function doFunc(func, args)
+		coroutine.wrap(func)(args)
+	end
+	
 	for _, command in pairs(commands) do
 		for _, commandString in pairs(commandsString:split(' ')) do
 			if commandString == command.name then
-				command.func(msgArgs)
+				doFunc(command.func, msgArgs)
 			else
 				for _, alias in pairs(command.alias) do
 					if commandString == alias then
-						command.func(msgArgs)
+						doFunc(command.func, msgArgs)
 					end
 				end
 			end
@@ -247,8 +251,11 @@ end)
 
 addCommand('goto', {'to'}, {}, function(args)
 	local players = game:GetService('Players')
-  	local username = table.unpack(args)
+  	local username = args[1]
 	local targetPlayer = findPlayer(username, players:GetPlayers())
+		
+	print(username)
+	print(targetPlayer)
 
 	if targetPlayer then
 		local localRootPart = getRootPart(localPlayer)
