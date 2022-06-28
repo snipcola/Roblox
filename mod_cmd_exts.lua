@@ -229,13 +229,13 @@ ui.command:GetPropertyChangedSignal('Text'):Connect(function()
 
 	ui.placeholder.Text = ''
 	
-	if targetPlayer and args[2] ~= '' and not args[3] then ui.placeholder.Text = targetPlayer.Name:sub(args[2]:len() + 1)
-	elseif command and args[1] ~= '' and not args[2] then ui.placeholder.Text = command.name:sub(args[1]:len() + 1) end
+	if targetPlayer and args[2] ~= '' and not args[3] then ui.placeholder.Text = targetPlayer.Name:sub(args[2]:len() + 1):lower()
+	elseif command and args[1] ~= '' and not args[2] then ui.placeholder.Text = command.name:sub(args[1]:len() + 1):lower() end
 	
 	if command then
 		for i, possibleArgs in pairs(command.args) do
 			for _, arg in pairs(possibleArgs) do
-				if arg and args[i + 1] and args[i + 1] ~= '' and not args[i + 3] and startsWith(arg:lower(), args[i + 1]) then ui.placeholder.Text = arg:sub(args[i + 1]:len() + 1) end
+				if arg and args[i + 1] and args[i + 1] ~= '' and not args[i + 3] and startsWith(arg:lower(), args[i + 1]) then ui.placeholder.Text = arg:sub(args[i + 1]:len() + 1):lower() end
 			end
 		end
 	end
@@ -256,18 +256,20 @@ ui.placeholder.BorderSizePixel = 0
 
 addCommand('gettool', {XAdminVariables.gameTools}, function(args)
 	local tools = XAdminVariables.gameTools
+	local text = table.concat(args, " ")
+	
 	local function getTool(tool)
 		SendNotification('Tool', tool)
 	end
 		
 	for _, tool in pairs(tools) do
-		if tool == args[0] then
+		if tool:lower() == text:lower() then
 			getTool(tool)
 		end
 	end
 		
 	for _, tool in pairs(tools) do
-		if startsWith(tool, args[0]) then
+		if startsWith(tool:lower(), text:lower()) then
 			getTool(tool)
 		end
 	end
