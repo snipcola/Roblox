@@ -259,7 +259,7 @@ ui.gui.Parent = coreGui
 ui.frame.Name = randomString(100)
 ui.frame.AnchorPoint = Vector2.new(0.5, 1)
 ui.frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ui.frame.Transparency = .85
+ui.frame.Transparency = .6
 ui.frame.Size = UDim2.new(0, 500, 0, 30)
 ui.frame.Position = UDim2.new(0.5, 0, 0, 20)
 ui.frame.ClipsDescendants = true
@@ -290,7 +290,7 @@ ui.command.TextSize = 15
 ui.command.TextXAlignment = Enum.TextXAlignment.Left
 ui.command.Parent = ui.frame
 ui.command.TextColor3 = Color3.fromRGB(255, 255, 255)
-ui.command.PlaceholderColor3 = Color3.fromRGB(159, 159, 159)
+ui.command.PlaceholderColor3 = Color3.fromRGB(200, 200, 200)
 ui.command.FocusLost:Connect(toggleGui)
 ui.command:GetPropertyChangedSignal('Text'):Connect(function()
 	local args = ui.command.Text:split(' ')
