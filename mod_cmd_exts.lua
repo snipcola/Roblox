@@ -22,7 +22,23 @@ local commands = {}
 
 if not XAdminVariables then
 	getgenv().XAdminVariables = {
-		InfiniteStamina = false
+		InfiniteStamina = false,
+		gameTools = {
+			"Baseball Bat",
+			"Hammer",
+			"Knife",
+			"RFID Disruptor",
+			"Lockpick",
+			"Drill",
+			"Flashlight",
+			"Scanner"
+		},
+		moderateActions = {
+			"Warning",
+			"Kicked",
+			"Banned",
+			"Other"
+		}
 	}
 end
 
@@ -238,6 +254,25 @@ ui.placeholder.Text = ''
 ui.placeholder.TextColor3 = Color3.fromRGB(128, 128, 128)
 ui.placeholder.BorderSizePixel = 0
 
+addCommand('gettool', {XAdminVariables.gameTools}, function(args)
+	local tools = XAdminVariables.gameTools
+	local function getTool(tool)
+		SendNotification('Tool', tool)
+	end
+		
+	for _, tool in pairs(tools) do
+		if tool == args[0] then
+			getTool(tool)
+		end
+	end
+		
+	for _, tool in pairs(tools) do
+		if startsWith(tool, args[0]) then
+			getTool(tool)
+		end
+	end
+end)
+
 addCommand('res', {}, function()
 	local rootPart = getRootPart(localPlayer)
 		
@@ -363,7 +398,7 @@ addCommand('to', {}, function(args)
 	end
 end)
 
-addCommand('m', {nil, {"Warning", "Kicked", "Banned", "Other"}}, function(args)
+addCommand('m', {nil, XAdminVariables.moderateActions}, function(args)
 	local players = game:GetService('Players')
         local username, action = table.unpack(args)
 	local reason = table.concat(args, ' '):sub(#username + #action + 3)
