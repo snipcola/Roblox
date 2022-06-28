@@ -126,14 +126,14 @@ end
 
 local function findCommand(string)
 	for _, command in pairs(commands) do
-		if command.name and startsWith(command.name:lower(), string:lower()) then
-			return command
-		elseif command.alias then
+		if command.alias then
 			for _, alias in pairs(command.alias) do
 				if startsWith(alias:lower(), string:lower()) then
 					return command
 				end
 			end
+		elseif command.name and startsWith(command.name:lower(), string:lower()) then
+			return command
 		end
 	end
 
@@ -234,7 +234,7 @@ addCommand('infinitestamina', {'infstamina'}, {}, function()
 		local gameGui = playerGui:WaitForChild("GameGui")
 		local bottomLeft = gameGui:WaitForChild("BottomLeft")
 		local health = bottomLeft:WaitForChild("Health")
-		local staminaLS = bottomLeft:WaitForChild("Stamina LS")
+		local staminaLS = health:WaitForChild("Stamina LS")
 		local stamina = staminaLS:WaitForChild("Stamina")
 			
 		stamina.Value = 100
