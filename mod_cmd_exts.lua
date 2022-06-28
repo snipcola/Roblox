@@ -126,17 +126,14 @@ end
 
 local function findCommand(string)
 	for _, command in pairs(commands) do
-		if command.alias then
+		if command.name and startsWith(command.name:lower(), string:lower()) then
+			return command
+		elseif command.alias then
 			for _, alias in pairs(command.alias) do
-				if startsWith(alias:lower(), string:lower()) then
-					local tcommand
-					tcommand.foundAlias = alias
-					
-					return tcommand
+				if startsWith(alias:lower(), string:lower()) then					
+					return command
 				end
 			end
-		elseif command.name and startsWith(command.name:lower(), string:lower()) then
-			return command
 		end
 	end
 
@@ -199,15 +196,13 @@ ui.command.PlaceholderColor3 = Color3.fromRGB(128, 128, 128)
 ui.command.FocusLost:Connect(toggleGui)
 ui.command:GetPropertyChangedSignal('Text'):Connect(function()
 	local args = ui.command.Text:split(' ')
-	local command = args[1] and findCommand(args[1]) or {}
-	local alias = command.foundAlias or nil
+	local command = args[1] and findCommand(args[1])
 	local targetPlayer = args[2] and findPlayer(args[2], players:GetPlayers())
-	local commandText = alias or command.name
 
 	ui.placeholder.Text = ''
 	
 	if targetPlayer and args[2] ~= '' and not args[3] then ui.placeholder.Text = targetPlayer.Name:sub(args[2]:len() + 1)
-	elseif command and args[1] ~= '' and not args[2] then ui.placeholder.Text = commandText:sub(args[1]:len() + 1) end
+	elseif command and args[1] ~= '' and not args[2] then ui.placeholder.Text = command.name:sub(args[1]:len() + 1) end
 	
 	if command then
 		for i, possibleArgs in pairs(command.args) do
