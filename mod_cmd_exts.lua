@@ -26,7 +26,7 @@ if not XAdminVariables then
 		UserInputServiceConnection,
 		InfiniteStamina = false,
 		gameVehicleLocations = {
-			["Spawn"] = CFrame.new(-662.1253662109375, 23.474824905395508, 641.8193969726562),
+			["Spawn"] = CFrame.new(-662.1253662109375, 23.474824905395508, 641.8193969726562)
 		},
 		gameLocations = {
 			["Spawn"] = CFrame.new(-678.4291381835938, 23.974824905395508, 762.0128173828125),
@@ -132,14 +132,13 @@ getgenv().XAdminGuiName = guiName
 local function toggleGui()
 	pcall(function()
 		if ui.frame.Visible then
-			ui.frame.Position = UDim2.new(0.5, 0, 1, -20)
-			ui.frame:TweenPosition(UDim2.new(0.5, 0, 1.5, -20), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, .25)
+			ui.frame:TweenPosition(UDim2.new(0.5, 0, -0.5, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, .25)
 			task.wait(.25)
 			ui.frame.Visible = false
 		else
-			ui.frame.Position = UDim2.new(0.5, 0, 1.5, -20)
+			ui.frame.Position = UDim2.new(0.5, 0, -0.5, 20)
 			ui.frame.Visible = true
-			ui.frame:TweenPosition(UDim2.new(0.5, 0, 1, -20), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, .25)
+			ui.frame:TweenPosition(UDim2.new(0.5, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Quint, .25)
 			ui.command:CaptureFocus()
 			task.wait()
 			ui.command.Text = ''
@@ -259,9 +258,10 @@ ui.gui.Parent = coreGui
 
 ui.frame.Name = randomString(100)
 ui.frame.AnchorPoint = Vector2.new(0.5, 1)
-ui.frame.BackgroundColor3 = Color3.fromRGB(242, 242, 242)
+ui.frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ui.frame.Transparency = .85
 ui.frame.Size = UDim2.new(0, 500, 0, 30)
-ui.frame.Position = UDim2.new(0.5, 0, 1, -20)
+ui.frame.Position = UDim2.new(0.5, 0, 0, 20)
 ui.frame.ClipsDescendants = true
 ui.frame.Visible = false
 ui.frame.Parent = ui.gui
@@ -289,7 +289,8 @@ ui.command.Text = ''
 ui.command.TextSize = 15
 ui.command.TextXAlignment = Enum.TextXAlignment.Left
 ui.command.Parent = ui.frame
-ui.command.PlaceholderColor3 = Color3.fromRGB(128, 128, 128)
+ui.command.TextColor3 = Color3.fromRGB(255, 255, 255)
+ui.command.PlaceholderColor3 = Color3.fromRGB(159, 159, 159)
 ui.command.FocusLost:Connect(toggleGui)
 ui.command:GetPropertyChangedSignal('Text'):Connect(function()
 	local args = ui.command.Text:split(' ')
@@ -591,11 +592,14 @@ XAdminVariables.UserInputServiceConnection = userInputService.InputBegan:Connect
 		if input.KeyCode == Enum.KeyCode.Semicolon and not onGui then toggleGui()
 		elseif ui.frame.Visible and input.KeyCode == Enum.KeyCode.Return then
 			local text = ui.command.Text:split(' ')[1]
-			local command = findCommand(text)
-			local args = ui.command.Text:sub(#command.name + 2):split(' ')
 			
-			toggleGui()
-			executeCommand(command.name, args)
+			if text ~= '' and text ~= nil then
+				local command = findCommand(text)
+				local args = ui.command.Text:sub(#command.name + 2):split(' ')
+
+				toggleGui()
+				executeCommand(command.name, args)
+			end
 		elseif input.KeyCode == Enum.KeyCode.N and not onGui then
 			executeCommand('res')
 		end
