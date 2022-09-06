@@ -177,7 +177,7 @@ DisableScript = function()
 end
 
 KillScript = function()
-    CreateNotification('Script Status', 'The script is now killed.', 1)
+    CreateNotification('Script Status', 'The script has been killed.', 1)
     
     ScriptActive = false
     DestroyConnections()
