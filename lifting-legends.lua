@@ -3,6 +3,9 @@ local XLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/snipcola
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local UserInputService = game:GetService('UserInputService')
 
+local VirtualUser = game:GetService('VirtualUser')
+local Camera = workspace.CurrentCamera
+
 local Events = ReplicatedStorage:WaitForChild('Events')
 local Functions = ReplicatedStorage:WaitForChild('Functions')
 
@@ -187,5 +190,11 @@ ToggleScript = function()
         EnableScript()
     end
 end
+
+Player.Idled:Connect(function()
+    VirtualUser:Button2Down(Vector2.new(0, 0), Camera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0, 0), Camera.CFrame)
+end)
 
 EnableScript()
