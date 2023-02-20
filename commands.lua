@@ -41,12 +41,6 @@ local function System.AddCommand (name, aliases, func)
     table.insert(Commands, Command)
 end
 
-local function System.Initialize ()
-    getgenv().FollowingPlayer = false
-    getgenv().CommandEventsHooked = true
-    getgenv().Commands = Commands
-end
-
 -- Message System
 local function IsWhitelisted (Player)
     local Name = Player.Name
@@ -87,11 +81,17 @@ local function AddChatEvent (Player)
     end
 end
 
-Players.PlayerAdded:Connect(AddChatEvent)
+-- Return
+local function System.Initialize ()
+    Players.PlayerAdded:Connect(AddChatEvent)
 
-for _, Player in pairs(Players:GetPlayers()) do
-    AddChatEvent(Player)
+    for _, Player in pairs(Players:GetPlayers()) do
+        AddChatEvent(Player)
+    end
+
+    getgenv().FollowingPlayer = false
+    getgenv().CommandEventsHooked = true
+    getgenv().Commands = Commands
 end
 
--- Return
 return System
