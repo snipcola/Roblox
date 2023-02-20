@@ -1,10 +1,10 @@
 -- Command System
 local System = {}
-local Config = {
+local System.Config = {
     Prefix = '.'
 }
 
-local Commands = {}
+local System.Commands = {}
 local Players = game:GetService('Players')
 
 local LocalPlayer = Players.LocalPlayer
@@ -18,7 +18,7 @@ function System.SetWhitelisted (Players)
 end
 
 function System.SetPrefix (Prefix)
-    Config.Prefix = Prefix
+    System.Config.Prefix = Prefix
 end
 
 local function FindCommand (Name)
@@ -38,7 +38,7 @@ function System.AddCommand (name, aliases, func)
         func = func
     }
 
-    table.insert(Commands, Command)
+    table.insert(System.Commands, Command)
 end
 
 -- Message System
@@ -57,14 +57,18 @@ end
 local function OnMessage (Message)
     local Prefix = string.sub(Message, 1, 1)
 
-    if Config.Prefix ~= Prefix then return end
+    if System.Config.Prefix ~= Prefix then
+        return
+    end
 
     local Words = Message:split(' ')
     local Name = Words[1]:sub(2)
 
     local Command = FindCommand(Name)
 
-    if Command == nil then return end
+    if Command == nil then
+        return
+    end
 
     local Arguments = Words
 
@@ -91,7 +95,7 @@ function System.Initialize ()
 
     getgenv().FollowingPlayer = false
     getgenv().CommandEventsHooked = true
-    getgenv().Commands = Commands
+    getgenv().Commands = System.Commands
 end
 
 return System
