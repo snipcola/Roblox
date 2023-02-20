@@ -1,10 +1,11 @@
 -- Command System
 local System = {}
-local System.Config = {
+
+System.Commands = {}
+System.Config = {
     Prefix = '.'
 }
 
-local System.Commands = {}
 local Players = game:GetService('Players')
 
 local LocalPlayer = Players.LocalPlayer
