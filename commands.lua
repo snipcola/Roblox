@@ -13,11 +13,11 @@ getgenv().WhitelistedPlayers = {
     LocalPlayer.Name
 }
 
-local function System.SetWhitelisted (Players)
+function System.SetWhitelisted (Players)
     getgenv().WhitelistedPlayers = Players
 end
 
-local function System.SetPrefix (Prefix)
+function System.SetPrefix (Prefix)
     Config.Prefix = Prefix
 end
 
@@ -31,7 +31,7 @@ local function FindCommand (Name)
     end
 end
 
-local function System.AddCommand (name, aliases, func)
+function System.AddCommand (name, aliases, func)
     local Command = {
         name = name,
         aliases = aliases,
@@ -82,7 +82,7 @@ local function AddChatEvent (Player)
 end
 
 -- Return
-local function System.Initialize ()
+function System.Initialize ()
     Players.PlayerAdded:Connect(AddChatEvent)
 
     for _, Player in pairs(Players:GetPlayers()) do
