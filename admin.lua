@@ -1,6 +1,8 @@
 -- Loading & Configuration
+repeat task.wait() until game:IsLoaded()
+
 getgenv().CommandsConfig = {
-    Host = 'sniphost1',
+    Host = getgenv().Host,
     AntiAFK = true
 }
 
@@ -23,6 +25,26 @@ Players = game:GetService('Players')
 LocalPlayer = Players.LocalPlayer
 
 -- Functions
+function StartsWith (String, String2)
+    return String:sub(1, #String2) == String2
+end
+
+function FindPlayer(Username)
+    for _, Player in pairs(Players:GetPlayers()) do
+        if Player ~= LocalPlayer then
+            if Player.Name:lower() == Username:lower() then
+                return Player
+            elseif Player.DisplayName:lower() == Username:lower() then
+                return Player
+            elseif StartsWith(Player.Name:lower(), Username:lower()) then
+                return Player
+            elseif StartsWith(Player.DisplayName:lower(), Username:lower()) then
+                return Player
+            end
+        end
+    end
+end
+
 function SendMessage (Message)
     ChatSystemEvents.SayMessageRequest:FireServer(Message, 'All')
 end
@@ -75,6 +97,75 @@ Commands.AddHostCommand('hostrejoin', { 'hostrj' }, function ()
 end)
 
 -- Commands
+Commands.CreateCommand('follow', { 'walkto' }, [[
+    return function (Args)
+        local Player = FindPlayer(Args[1])
+
+        local Character = LocalPlayer.Character
+        local Character2 = Player.Character
+
+        getgenv().FollowingPlayer = true
+
+        while getgenv().FollowingPlayer and task.wait() do
+            if Character and Character2 and Character:FindFirstChild('HumanoidRootPart') and Character2:FindFirstChild('HumanoidRootPart') then
+                Character.Humanoid:MoveTo(Character2.HumanoidRootPart.CFrame.p)
+
+                if Character2.Humanoid.FloorMaterial == Enum.Material.Air then
+                    Character.Humanoid.Jump = true
+                end
+            else
+                getgenv().FollowingPlayer = false
+            end
+        end
+    end
+]])
+
+Commands.CreateCommand('unfollow', { 'unwalkto' }, [[
+    return function (Args)
+        getgenv().FollowingPlayer = false
+    end
+]])
+
+Commands.CreateCommand('respawn', { 'res' }, [[
+    return function ()
+        local Character = LocalPlayer.Character
+
+        if Character and Character.Head then
+            Character.Head.Parent = nil
+        end
+    end
+]])
+
+Commands.CreateCommand('teleport', { 'goto' }, [[
+    return function (Args)
+        local Player = FindPlayer(Args[1])
+
+        Teleport(Player)
+    end
+]])
+
+Commands.CreateCommand('walkspeed', { 'speed', 'ws' }, [[
+    return function (Args)
+        local Speed = tonumber(Args[1])
+        local Character = LocalPlayer.Character
+
+        if Character then
+            Character.Humanoid.WalkSpeed = Speed or 1
+        end
+    end
+]])
+
+Commands.CreateCommand('jumppower', { 'jump', 'jp' }, [[
+    return function (Args)
+        local Power = tonumber(Args[1])
+        local Character = LocalPlayer.Character
+
+        if Character then
+            Character.Humanoid.JumpPower = Power or 1
+        end
+    end
+]])
+
 Commands.CreateCommand('alive', { 'a' }, [[
     return function ()
         SendMessage(string.format('%s is alive', LocalPlayer.Name))
