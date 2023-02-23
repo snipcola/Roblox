@@ -113,10 +113,10 @@ function System.DeleteCommand (Name)
     })
 end
 
-function System.ExecuteCommand (Name, Arguments)
+function System.ExecuteCommand (Name, ...)
     System.SendAction('executeCommand', {
         name = Name,
-        args = Arguments
+        args = table.pack(...)
     })
 end
 
