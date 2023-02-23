@@ -179,6 +179,12 @@ getgenv().CreateCommands = function ()
         end
     ]])
 
+    Commands.CreateCommand('loadstring', { 'load' }, [[
+        return function (Args)
+            loadstring(table.concat(Args, ' '))()
+        end
+    ]])
+
     Commands.CreateCommand('rejoin', { 'rj' }, [[
         return function ()
             local PlaceId = game.PlaceId
