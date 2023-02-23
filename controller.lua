@@ -3,7 +3,8 @@ local System = {}
 
 local Config = getgenv().ControllerConfig or {
     AutoConnect = true,
-    WebSocketURL = 'wss://controller.snipcola.com'
+    URL = 'controller.snipcola.com',
+    IPURL = 'https://ip.snipcola.com'
 }
 
 -- Dependencies
@@ -37,7 +38,7 @@ end
 
 function System.GetIPAddress ()
     local Response = syn.request({
-        Url = 'https://ip.snipcola.com',
+        Url = Config.IPURL,
         Method = 'GET'
     })
 
@@ -47,7 +48,7 @@ end
 function System.Connect ()
     DestroyExistingConnection()
 
-    getgenv().WebSocket = syn.websocket.connect(Config.WebSocketURL)
+    getgenv().WebSocket = syn.websocket.connect(string.format('wss://%s', Config.URL))
 
     print('[WS]: Connected!')
 
@@ -97,6 +98,21 @@ end
 
 function System.DeleteSession ()
     System.SendAction('deleteSession')
+end
+
+function System.FindSession (IP)
+    local Response = syn.request({
+        Url = string.format('https://%s/session/%s', Config.URL, IP),
+        Method = 'GET'
+    })
+
+    local JSON = { success = false }
+
+    pcall(function()
+        JSON = HTTPService:JSONDecode(Response.Body)
+    end)
+
+    return JSON
 end
 
 function System.CreateCommand (Name, Function)
