@@ -30,7 +30,21 @@ function System.OnMessage (Message)
 
     table.remove(Arguments, 1)
 
-    Commands.ExecuteCommand(Name, Arguments)
+    local Commands = Commands.GetCommands()
+
+    if Commands[Name] then
+        Commands.ExecuteCommand(Name, Arguments)
+    else
+        local Command = Commands.FindHostCommand(Name)
+
+        if Command == nil then
+            return
+        end
+
+        coroutine.wrap(function ()
+            Command.func(Arguments)
+        end)()
+    end
 end
 
 -- Add Chat Event
