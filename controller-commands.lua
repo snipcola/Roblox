@@ -2,6 +2,7 @@ local Controller = loadstring(game:HttpGet('https://raw.githubusercontent.com/sn
 
 -- Command System
 local System = {}
+local HostCommands = {}
 local Config = getgenv().CommandsConfig or {}
 
 -- Dependencies
@@ -10,6 +11,26 @@ local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 
 -- Functions
+function System.FindHostCommand (Name)
+    for _, Command in pairs(HostCommands) do
+        if Command.name == Name then
+            return Command
+        elseif table.find(Command.aliases, Name) then
+            return Command
+        end
+    end
+end
+
+function System.AddHostCommand (name, aliases, func)
+    local Command = {
+        name = name,
+        aliases = aliases,
+        func = func
+    }
+
+    table.insert(HostCommands, Command)
+end
+
 local function Idled ()
     VirtualUser:CaptureController()
     VirtualUser:ClickButton2(Vector2.new())
