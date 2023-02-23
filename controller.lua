@@ -100,7 +100,7 @@ function System.DeleteSession ()
     System.SendAction('deleteSession')
 end
 
-function System.FindSession (IP)
+function System.FindSession ()
     local Response = syn.request({
         Url = string.format('https://%s/session/%s', Config.URL, IP),
         Method = 'GET'
