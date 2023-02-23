@@ -93,6 +93,15 @@ else
     Controller.JoinSession()
 end
 
+getgenv().WebSocket.OnClose = function ()
+    if System.IsHost() then
+        Controller.CreateSession()
+    else
+        System.WaitForSession()
+        Controller.JoinSession()
+    end
+end
+
 -- Return
 getgenv().Commands = System
 return System
