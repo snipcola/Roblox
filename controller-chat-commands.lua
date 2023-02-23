@@ -38,3 +38,7 @@ if Commands.IsHost() and not getgenv().CommandEventsHooked then
     LocalPlayer.Chatted:Connect(System.OnMessage)
     getgenv().CommandEventsHooked = true
 end
+
+-- Return
+getgenv().ChatSystem = System
+return System
