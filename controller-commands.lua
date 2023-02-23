@@ -80,29 +80,32 @@ function System.WaitForSession ()
     end
 end
 
--- Anti AFK
-if Config.AntiAFK then
-    LocalPlayer.Idled:Connect(Idled)
-end
-
--- Create or Join Session
-if System.IsHost() then
-    Controller.CreateSession()
-else
-    System.WaitForSession()
-    Controller.JoinSession()
-end
-
-getgenv().WebSocket.OnClose:Connect(function ()
-    Controller.Connect()
-
+function CreateOrJoinSession ()
     if System.IsHost() then
         Controller.CreateSession()
     else
         System.WaitForSession()
         Controller.JoinSession()
     end
-end)
+end
+
+function WebSocketClose ()
+    Controller.Connect()
+    getgenv().WebSocket.OnClose:Connect(WebSocketClose)
+    
+    CreateOrJoinSession()
+end
+
+-- Anti AFK
+if Config.AntiAFK then
+    LocalPlayer.Idled:Connect(Idled)
+end
+
+-- Create or Join Session
+CreateOrJoinSession()
+
+-- Hook to WebSocket Close
+getgenv().WebSocket.OnClose:Connect(WebSocketClose)
 
 -- Return
 getgenv().Commands = System
