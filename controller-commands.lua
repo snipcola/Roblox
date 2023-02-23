@@ -37,9 +37,13 @@ function System.ExecuteCommand (Name, ...)
     end
 end
 
-function System.CreateCommand (Name, Function)
+function System.CreateCommand (Name, Aliases, Function)
     if System.IsHost() then
         Controller.CreateCommand(Name, Function)
+
+        for _, Alias in pairs(Aliases or {}) do
+            Controller.CreateCommand(Alias, Function)
+        end
     end
 end
 
