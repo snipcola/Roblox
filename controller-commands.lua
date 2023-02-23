@@ -9,10 +9,6 @@ local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 
 -- Functions
-function System.SetHost (Host)
-    Config.Host = Host
-end
-
 function System.IsHost ()
     return LocalPlayer.Name == Config.Host
 end
