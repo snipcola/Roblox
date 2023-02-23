@@ -1,4 +1,4 @@
-local Controller = getgenv().Controller or loadstring(game:HttpGet("https://raw.githubusercontent.com/snipcola/roblox/main/controller.lua"))()
+local Controller = loadstring(game:HttpGet('https://raw.githubusercontent.com/snipcola/roblox/main/controller.lua'))()
 
 -- Command System
 local System = {}
