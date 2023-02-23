@@ -94,6 +94,8 @@ else
 end
 
 getgenv().WebSocket.OnClose:Connect(function ()
+    Controller.Connect()
+
     if System.IsHost() then
         Controller.CreateSession()
     else
