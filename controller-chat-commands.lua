@@ -30,17 +30,11 @@ function System.OnMessage (Message)
 
     table.remove(Arguments, 1)
 
-    local Commands = Commands.GetCommands()
+    local Command = Commands.FindHostCommand(Name)
 
-    if Commands[Name] then
+    if Command == nil then
         Commands.ExecuteCommand(Name, Arguments)
     else
-        local Command = Commands.FindHostCommand(Name)
-
-        if Command == nil then
-            return
-        end
-
         coroutine.wrap(function ()
             Command.func(Arguments)
         end)()
