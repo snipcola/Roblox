@@ -135,5 +135,5 @@ if Config.AutoJoinSession then
 end
 
 -- Return
-getgenv().System = System
+getgenv().Controller = System
 return System
