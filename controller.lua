@@ -1,6 +1,5 @@
 -- Controller System
 local System = {}
-local WebSocket = nil
 
 local Config = getgenv().ControllerConfig or {
     AutoConnect = true,
@@ -136,4 +135,5 @@ if Config.AutoJoinSession then
 end
 
 -- Return
+getgenv().System = System
 return System
