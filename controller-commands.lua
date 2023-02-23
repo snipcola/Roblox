@@ -94,6 +94,10 @@ function WebSocketClose ()
     getgenv().WebSocket.OnClose:Connect(WebSocketClose)
     
     CreateOrJoinSession()
+    
+    if getgenv().CreateCommands then
+        getgenv().CreateCommands()
+    end
 end
 
 -- Anti AFK
