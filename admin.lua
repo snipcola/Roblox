@@ -97,145 +97,149 @@ Commands.AddHostCommand('hostrejoin', { 'hostrj' }, function ()
 end)
 
 -- Commands
-Commands.CreateCommand('follow', { 'walkto' }, [[
-    return function (Args)
-        local Player = FindPlayer(Args[1])
+getgenv().CreateCommands = function ()
+    Commands.CreateCommand('follow', { 'walkto' }, [[
+        return function (Args)
+            local Player = FindPlayer(Args[1])
 
-        local Character = LocalPlayer.Character
-        local Character2 = Player.Character
+            local Character = LocalPlayer.Character
+            local Character2 = Player.Character
 
-        getgenv().FollowingPlayer = true
+            getgenv().FollowingPlayer = true
 
-        while getgenv().FollowingPlayer and task.wait() do
-            if Character and Character2 and Character:FindFirstChild('HumanoidRootPart') and Character2:FindFirstChild('HumanoidRootPart') then
-                Character.Humanoid:MoveTo(Character2.HumanoidRootPart.CFrame.p)
+            while getgenv().FollowingPlayer and task.wait() do
+                if Character and Character2 and Character:FindFirstChild('HumanoidRootPart') and Character2:FindFirstChild('HumanoidRootPart') then
+                    Character.Humanoid:MoveTo(Character2.HumanoidRootPart.CFrame.p)
 
-                if Character2.Humanoid.FloorMaterial == Enum.Material.Air then
-                    Character.Humanoid.Jump = true
+                    if Character2.Humanoid.FloorMaterial == Enum.Material.Air then
+                        Character.Humanoid.Jump = true
+                    end
+                else
+                    getgenv().FollowingPlayer = false
                 end
-            else
-                getgenv().FollowingPlayer = false
             end
         end
-    end
-]])
+    ]])
 
-Commands.CreateCommand('unfollow', { 'unwalkto' }, [[
-    return function (Args)
-        getgenv().FollowingPlayer = false
-    end
-]])
-
-Commands.CreateCommand('respawn', { 'res' }, [[
-    return function ()
-        local Character = LocalPlayer.Character
-
-        if Character and Character.Head then
-            Character.Head.Parent = nil
+    Commands.CreateCommand('unfollow', { 'unwalkto' }, [[
+        return function (Args)
+            getgenv().FollowingPlayer = false
         end
-    end
-]])
+    ]])
 
-Commands.CreateCommand('teleport', { 'goto' }, [[
-    return function (Args)
-        local Player = FindPlayer(Args[1])
+    Commands.CreateCommand('respawn', { 'res' }, [[
+        return function ()
+            local Character = LocalPlayer.Character
 
-        Teleport(Player)
-    end
-]])
-
-Commands.CreateCommand('walkspeed', { 'speed', 'ws' }, [[
-    return function (Args)
-        local Speed = tonumber(Args[1])
-        local Character = LocalPlayer.Character
-
-        if Character then
-            Character.Humanoid.WalkSpeed = Speed or 1
+            if Character and Character.Head then
+                Character.Head.Parent = nil
+            end
         end
-    end
-]])
+    ]])
 
-Commands.CreateCommand('jumppower', { 'jump', 'jp' }, [[
-    return function (Args)
-        local Power = tonumber(Args[1])
-        local Character = LocalPlayer.Character
+    Commands.CreateCommand('teleport', { 'goto' }, [[
+        return function (Args)
+            local Player = FindPlayer(Args[1])
 
-        if Character then
-            Character.Humanoid.JumpPower = Power or 1
+            Teleport(Player)
         end
-    end
-]])
+    ]])
 
-Commands.CreateCommand('alive', { 'a' }, [[
-    return function ()
-        SendMessage(string.format('%s is alive', LocalPlayer.Name))
-    end
-]])
+    Commands.CreateCommand('walkspeed', { 'speed', 'ws' }, [[
+        return function (Args)
+            local Speed = tonumber(Args[1])
+            local Character = LocalPlayer.Character
 
-Commands.CreateCommand('message', { 'say' }, [[
-    return function (Args)
-        SendMessage(table.concat(Args, ' '))
-    end
-]])
+            if Character then
+                Character.Humanoid.WalkSpeed = Speed or 1
+            end
+        end
+    ]])
 
-Commands.CreateCommand('rejoin', { 'rj' }, [[
-    return function ()
-        local PlaceId = game.PlaceId
-        local JobId = game.JobId
+    Commands.CreateCommand('jumppower', { 'jump', 'jp' }, [[
+        return function (Args)
+            local Power = tonumber(Args[1])
+            local Character = LocalPlayer.Character
 
-        TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
-    end
-]])
+            if Character then
+                Character.Humanoid.JumpPower = Power or 1
+            end
+        end
+    ]])
 
-Commands.CreateCommand('bring', {}, [[
-    return function ()
-        Teleport(Players:WaitForChild(getgenv().CommandsConfig.Host))
-    end
-]])
+    Commands.CreateCommand('alive', { 'a' }, [[
+        return function ()
+            SendMessage(string.format('%s is alive', LocalPlayer.Name))
+        end
+    ]])
 
-Commands.CreateCommand('air', {}, [[
-    return function ()
-        local Character = LocalPlayer.Character
-        local RootPart = Character.HumanoidRootPart
-        local Position = RootPart.Position
+    Commands.CreateCommand('message', { 'say' }, [[
+        return function (Args)
+            SendMessage(table.concat(Args, ' '))
+        end
+    ]])
 
-        TeleportCFrame(CFrame.new(Position.X, 50, Position.Z))
-        task.wait(.1)
-        RootPart.Anchored = true
-    end
-]])
+    Commands.CreateCommand('rejoin', { 'rj' }, [[
+        return function ()
+            local PlaceId = game.PlaceId
+            local JobId = game.JobId
 
-Commands.CreateCommand('unair', {}, [[
-    return function ()
-        local Character = LocalPlayer.Character
-        local RootPart = Character.HumanoidRootPart
+            TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
+        end
+    ]])
 
-        RootPart.Anchored = false
-    end
-]])
+    Commands.CreateCommand('bring', {}, [[
+        return function ()
+            Teleport(Players:WaitForChild(getgenv().CommandsConfig.Host))
+        end
+    ]])
 
-Commands.CreateCommand('emote', { 'e' }, [[
-    return function (Args)
-        local Emote = Args[1]
+    Commands.CreateCommand('air', {}, [[
+        return function ()
+            local Character = LocalPlayer.Character
+            local RootPart = Character.HumanoidRootPart
+            local Position = RootPart.Position
 
-        PlayerChat(string.format('/e %s', Emote))
-    end
-]])
+            TeleportCFrame(CFrame.new(Position.X, 50, Position.Z))
+            task.wait(.1)
+            RootPart.Anchored = true
+        end
+    ]])
 
-Commands.CreateCommand('performance', { 'perf' }, [[
-    return function (Args)
-        EnablePerformance()
-    end
-]])
+    Commands.CreateCommand('unair', {}, [[
+        return function ()
+            local Character = LocalPlayer.Character
+            local RootPart = Character.HumanoidRootPart
 
-Commands.CreateCommand('unperformance', { 'unperf' }, [[
-    return function (Args)
-        DisablePerformance()
-    end
-]])
+            RootPart.Anchored = false
+        end
+    ]])
 
-Commands.CreateCommand('join', {}, string.format([[
-    return function ()
-        TeleportService:TeleportToPlaceInstance('%s', '%s', LocalPlayer)
-    end
-]], game.PlaceId, game.JobId))
+    Commands.CreateCommand('emote', { 'e' }, [[
+        return function (Args)
+            local Emote = Args[1]
+
+            PlayerChat(string.format('/e %s', Emote))
+        end
+    ]])
+
+    Commands.CreateCommand('performance', { 'perf' }, [[
+        return function (Args)
+            EnablePerformance()
+        end
+    ]])
+
+    Commands.CreateCommand('unperformance', { 'unperf' }, [[
+        return function (Args)
+            DisablePerformance()
+        end
+    ]])
+
+    Commands.CreateCommand('join', {}, string.format([[
+        return function ()
+            TeleportService:TeleportToPlaceInstance('%s', '%s', LocalPlayer)
+        end
+    ]], game.PlaceId, game.JobId))
+end
+
+getgenv().CreateCommands()
