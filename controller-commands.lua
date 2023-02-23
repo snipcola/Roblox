@@ -2,7 +2,7 @@ local Controller = getgenv().Controller or loadstring(game:HttpGet("https://raw.
 
 -- Command System
 local System = {}
-local Config = getgenv().CommandConfig or {}
+local Config = getgenv().CommandsConfig or {}
 
 -- Dependencies
 local Players = game:GetService('Players')
