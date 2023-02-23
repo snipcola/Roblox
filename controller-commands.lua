@@ -5,10 +5,16 @@ local System = {}
 local Config = getgenv().CommandsConfig or {}
 
 -- Dependencies
+local VirtualUser = game:GetService('VirtualUser')
 local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 
 -- Functions
+local function Idled ()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+ end
+
 function System.IsHost ()
     return LocalPlayer.Name == Config.Host
 end
@@ -47,6 +53,11 @@ function System.WaitForSession ()
     while not System.SessionExists() do
         task.wait(1)
     end
+end
+
+-- Anti AFK
+if Config.AntiAFK then
+    LocalPlayer.Idled:Connect(Idled)
 end
 
 -- Create or Join Session
