@@ -4,7 +4,8 @@ local System = {}
 local Config = getgenv().ControllerConfig or {
     AutoConnect = true,
     URL = 'controller.snipcola.com',
-    IPURL = 'https://ip.snipcola.com'
+    IPURL = 'https://ip.snipcola.com',
+    Logs = false
 }
 
 -- Dependencies
@@ -50,10 +51,14 @@ function System.Connect ()
 
     getgenv().WebSocket = syn.websocket.connect(string.format('wss://%s', Config.URL))
 
-    print('[WS]: Connected!')
+    if Config.Logs then
+        print('[WS]: Connected!')
+    end
 
     getgenv().WebSocket.OnMessage:Connect(function (Message)
-        print(string.format('[WS]: %s', Message))
+        if Config.Logs then
+            print(string.format('[WS]: %s', Message))
+        end
 
         pcall(function()
             local json = HTTPService:JSONDecode(Message)
@@ -65,7 +70,9 @@ function System.Connect ()
     end)
 
     getgenv().WebSocket.OnClose:Connect(function ()
-        print('[WS]: Disconnected!')
+        if Config.Logs then
+            print('[WS]: Disconnected!')
+        end
     end)
 end
 
