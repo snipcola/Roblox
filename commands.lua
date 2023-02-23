@@ -2,8 +2,9 @@
 local System = {}
 
 System.Commands = {}
-System.Config = {
-    Prefix = '.'
+System.Config = getgenv().Config or {
+    Prefix = '.',
+    NoWhitelist: true
 }
 
 local Players = game:GetService('Players')
@@ -45,6 +46,8 @@ end
 -- Message System
 local function IsWhitelisted (Player)
     local Name = Player.Name
+    
+    if (Config.NoWhitelist) return true
 
     for _, WhitelistedPlayer in pairs(getgenv().WhitelistedPlayers) do
         if WhitelistedPlayer == Name then
