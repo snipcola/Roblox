@@ -4,6 +4,9 @@ local games = {
         "https://gist.githubusercontent.com/snipcola/e0a412be43e361a57723d3db25f8e25a/raw/SNCO.lua",
         "https://gist.githubusercontent.com/snipcola/6c0edbca90a24a05b7eb033d40cf6bf7/raw/Open-Aimbot-Personal.lua",
         "https://gist.githubusercontent.com/snipcola/1fa1a5e64ce2ab22b4e022239a86aa1d/raw/Infinite-Yield.lua"
+    },
+    [2534724415] = {
+        "https://raw.githubusercontent.com/snipcola/roblox/main/mod_cmd_exts.lua"
     }
 }
 
@@ -47,13 +50,17 @@ local function initialize()
 end
 
 local function urls(id)
+    local total = {}
+    
     for game, urls in pairs(games) do
         if type(game) == "table" and table.find(game, id) or game == id then
-            return urls
+            for _, url in ipairs(urls) do
+                table.insert(total, url)
+            end
         end
     end
 
-    return {}
+    return total
 end
 
 --! Set-up
