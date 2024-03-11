@@ -1,6 +1,6 @@
 --! Configuration
 local games = {
-    [{ 2534724415, 7711635737 }] = {
+    [{ 2534724415, 7711635737, 15787925600 }] = {
         "https://gist.githubusercontent.com/snipcola/e0a412be43e361a57723d3db25f8e25a/raw/SNCO.lua",
         "https://gist.githubusercontent.com/snipcola/6c0edbca90a24a05b7eb033d40cf6bf7/raw/Open-Aimbot-Personal.lua",
         "https://gist.githubusercontent.com/snipcola/1fa1a5e64ce2ab22b4e022239a86aa1d/raw/Infinite-Yield.lua"
